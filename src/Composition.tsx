@@ -1,5 +1,5 @@
 import React from 'react';
-import {AbsoluteFill, useCurrentFrame} from 'remotion';
+import {AbsoluteFill, useCurrentFrame, useVideoConfig} from 'remotion';
 
 const cursor: React.CSSProperties = {
 	height: 60,
@@ -12,13 +12,16 @@ const cursor: React.CSSProperties = {
 
 export const MyComposition = () => {
 	const frame = useCurrentFrame();
-	const text = 'Typewriter Effect';
-	// A new character every 3 frames
-	const charsShown = Math.floor(frame / 3);
+	const config = useVideoConfig();
+	const text = 'Welcome to my first video! with Remotion !!!';
+	const totalChars = text.length;
+	const totalFrames = config.durationInFrames - 30;
+	const charsPerFrame = totalChars / totalFrames;
+	const charsShown = Math.floor(charsPerFrame * frame);
 	const textToShow = text.slice(0, charsShown);
 	// Show the cursor while the text is typing, then start blinking
 	const cursorShown =
-		textToShow.length === text.length ? Math.floor(frame / 10) % 2 === 1 : true;
+		textToShow.length > text.length ? Math.floor(frame / 10) % 2 === 1 : true;
 
 	return (
 		<AbsoluteFill
